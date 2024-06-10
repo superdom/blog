@@ -1,0 +1,49 @@
+model_name_or_path: unsloth/llama-3-8b-Instruct-bnb-4bit
+quantization_bit: 4
+use_unsloth: true
+
+### method
+stage: sft
+do_train: true
+flash_attn: auto
+use_unsloth: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 8
+lora_alpha: 16
+lora_dropout: 0
+
+## ddp
+# deepspeed: examples/deepspeed/ds_z2_config.json
+
+### dataset
+dataset_dir: data
+dataset: ko_civil_service_inst
+template: llama3
+cutoff_len: 1024
+#max_samples: 1000
+#overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: output/llama-3-8b-Instruct-bnb-4bit/qlora
+logging_steps: 10
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+learning_rate: 1.0e-4
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+report_to: none
+
+### eval
+val_size: 0.1
+per_device_eval_batch_size: 1
+evaluation_strategy: steps
+eval_steps: 100
